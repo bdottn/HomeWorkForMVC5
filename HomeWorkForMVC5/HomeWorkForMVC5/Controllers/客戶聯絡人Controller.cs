@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
+﻿using HomeWorkForMVC5.Models;
 using System.Data.Entity;
 using System.Linq;
 using System.Net;
-using System.Web;
 using System.Web.Mvc;
-using HomeWorkForMVC5.Models;
 
 namespace HomeWorkForMVC5.Controllers
 {
@@ -14,11 +10,21 @@ namespace HomeWorkForMVC5.Controllers
     {
         private 客戶資料Entities db = new 客戶資料Entities();
 
-        // GET: 客戶聯絡人
-        public ActionResult Index()
+        /// <summary>
+        /// 客戶聯絡人管理
+        /// </summary>
+        /// <param name="search">聯絡人姓名</param>
+        public ActionResult Index(string search)
         {
-            var 客戶聯絡人 = db.客戶聯絡人.Include(客 => 客.客戶資料);
-            return View(客戶聯絡人.ToList());
+            var data = db.客戶聯絡人.AsQueryable();
+            data = data.Include(d => d.客戶資料);
+
+            if (string.IsNullOrEmpty(search) == false)
+            {
+                data = data.Where(d => d.姓名.Contains(search));
+            }
+
+            return View(data);
         }
 
         // GET: 客戶聯絡人/Details/5
