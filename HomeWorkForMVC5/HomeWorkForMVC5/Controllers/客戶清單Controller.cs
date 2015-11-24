@@ -8,10 +8,21 @@ namespace HomeWorkForMVC5.Controllers
     {
         private 客戶資料Entities db = new 客戶資料Entities();
 
-        // GET: 客戶清單
-        public ActionResult Index()
+        /// <summary>
+        /// 客戶清單列表
+        /// </summary>
+        /// <param name="search">客戶名稱</param>
+        public ActionResult Index(string search)
         {
-            return View(db.客戶清單.ToList());
+            ViewBag.search = search;
+
+            var data = db.客戶清單.AsQueryable();
+            if (string.IsNullOrEmpty(search) == false)
+            {
+                data = data.Where(d => d.客戶名稱.Contains(search));
+            }
+
+            return View(data);
         }
 
         protected override void Dispose(bool disposing)

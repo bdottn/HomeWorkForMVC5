@@ -23,7 +23,7 @@ namespace HomeWorkForMVC5.Controllers
 
             if (string.IsNullOrEmpty(search) == false)
             {
-                data = data.Where(d => d.帳戶名稱.Contains(search));
+                data = data.Where(d => d.帳戶名稱.Contains(search) || d.客戶資料.客戶名稱.Contains(search));
             }
 
             return View(data);
