@@ -16,6 +16,8 @@ namespace HomeWorkForMVC5.Controllers
         /// <param name="search">客戶名稱</param>
         public ActionResult Index(string search)
         {
+            ViewBag.search = search;
+
             var data = db.客戶資料.AsQueryable();
 
             if (string.IsNullOrEmpty(search) == false)

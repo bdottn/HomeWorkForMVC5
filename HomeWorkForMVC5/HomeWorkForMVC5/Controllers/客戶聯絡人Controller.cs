@@ -16,6 +16,8 @@ namespace HomeWorkForMVC5.Controllers
         /// <param name="search">聯絡人姓名</param>
         public ActionResult Index(string search)
         {
+            ViewBag.search = search;
+
             var data = db.客戶聯絡人.AsQueryable();
             data = data.Include(d => d.客戶資料);
 

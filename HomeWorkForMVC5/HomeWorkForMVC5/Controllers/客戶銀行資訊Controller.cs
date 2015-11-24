@@ -16,6 +16,8 @@ namespace HomeWorkForMVC5.Controllers
         /// <param name="search">帳戶名稱</param>
         public ActionResult Index(string search)
         {
+            ViewBag.search = search;
+
             var data = db.客戶銀行資訊.AsQueryable();
             data = data.Include(d => d.客戶資料);
 
