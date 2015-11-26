@@ -1,6 +1,5 @@
 ﻿using HomeWorkForMVC5.Models;
 using System.Data.Entity;
-using System.Linq;
 using System.Net;
 using System.Web.Mvc;
 
@@ -8,7 +7,7 @@ namespace HomeWorkForMVC5.Controllers
 {
     public class 客戶資料Controller : Controller
     {
-        private 客戶資料Entities db = new 客戶資料Entities();
+        客戶資料Repository repo = RepositoryHelper.Get客戶資料Repository();
 
         /// <summary>
         /// 客戶資料管理
@@ -18,124 +17,110 @@ namespace HomeWorkForMVC5.Controllers
         {
             ViewBag.search = search;
 
-            var data = db.客戶資料.AsQueryable();
-
-            data = data.Where(d => d.是否已刪除 == false);
-
-            if (string.IsNullOrEmpty(search) == false)
-            {
-                data = data.Where(d => d.客戶名稱.Contains(search));
-            }
+            var data = this.repo.GetByKeyword(search, false);
 
             return View(data);
         }
 
-        // GET: 客戶資料/Details/5
         public ActionResult Details(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            客戶資料 客戶資料 = db.客戶資料.Find(id);
+
+            客戶資料 客戶資料 = this.repo.GetById(id);
+
             if (客戶資料 == null)
             {
                 return HttpNotFound();
             }
+
             return View(客戶資料);
         }
 
-        // GET: 客戶資料/Create
         public ActionResult Create()
         {
             return View();
         }
 
-        // POST: 客戶資料/Create
-        // 若要免於過量張貼攻擊，請啟用想要繫結的特定屬性，如需
-        // 詳細資訊，請參閱 http://go.microsoft.com/fwlink/?LinkId=317598。
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "Id,客戶名稱,統一編號,電話,傳真,地址,Email,是否已刪除")] 客戶資料 客戶資料)
         {
             if (ModelState.IsValid)
             {
-                db.客戶資料.Add(客戶資料);
-                db.SaveChanges();
+                this.repo.Add(客戶資料);
+
+                this.repo.UnitOfWork.Commit();
+
                 return RedirectToAction("Index");
             }
 
             return View(客戶資料);
         }
 
-        // GET: 客戶資料/Edit/5
         public ActionResult Edit(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            客戶資料 客戶資料 = db.客戶資料.Find(id);
+
+            客戶資料 客戶資料 = this.repo.GetById(id);
+
             if (客戶資料 == null)
             {
                 return HttpNotFound();
             }
+
             return View(客戶資料);
         }
 
-        // POST: 客戶資料/Edit/5
-        // 若要免於過量張貼攻擊，請啟用想要繫結的特定屬性，如需
-        // 詳細資訊，請參閱 http://go.microsoft.com/fwlink/?LinkId=317598。
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Edit([Bind(Include = "Id,客戶名稱,統一編號,電話,傳真,地址,Email,是否已刪除")] 客戶資料 客戶資料)
         {
             if (ModelState.IsValid)
             {
-                db.Entry(客戶資料).State = EntityState.Modified;
-                db.SaveChanges();
+                ((客戶資料Entities)this.repo.UnitOfWork.Context).Entry(客戶資料).State = EntityState.Modified;
+
+                this.repo.UnitOfWork.Commit();
+
                 return RedirectToAction("Index");
             }
             return View(客戶資料);
         }
 
-        // GET: 客戶資料/Delete/5
         public ActionResult Delete(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            客戶資料 客戶資料 = db.客戶資料.Find(id);
+
+            客戶資料 客戶資料 = this.repo.GetById(id);
+
             if (客戶資料 == null)
             {
                 return HttpNotFound();
             }
+
             return View(客戶資料);
         }
 
-        // POST: 客戶資料/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            客戶資料 客戶資料 = db.客戶資料.Find(id);
 
-            客戶資料.是否已刪除 = true;
+            客戶資料 客戶資料 = this.repo.GetById(id);
 
-            // 連動刪除客戶資料中的客戶聯絡人
-            foreach (var item in 客戶資料.客戶聯絡人)
-            {
-                item.是否已刪除 = true;
-            }
+            this.repo.Delete(客戶資料);
 
-            // 連動刪除客戶資料中的客戶銀行資訊
-            foreach (var item in 客戶資料.客戶銀行資訊)
-            {
-                item.是否已刪除 = true;
-            }
+            ((客戶資料Entities)this.repo.UnitOfWork.Context).Entry(客戶資料).State = EntityState.Modified;
 
-            db.SaveChanges();
+            this.repo.UnitOfWork.Commit();
 
             return RedirectToAction("Index");
         }
@@ -144,7 +129,7 @@ namespace HomeWorkForMVC5.Controllers
         {
             if (disposing)
             {
-                db.Dispose();
+                ((客戶資料Entities)this.repo.UnitOfWork.Context).Dispose();
             }
             base.Dispose(disposing);
         }

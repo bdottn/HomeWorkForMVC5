@@ -1,12 +1,11 @@
 ﻿using HomeWorkForMVC5.Models;
-using System.Linq;
 using System.Web.Mvc;
 
 namespace HomeWorkForMVC5.Controllers
 {
     public class 客戶清單Controller : Controller
     {
-        private 客戶資料Entities db = new 客戶資料Entities();
+        客戶清單Repository repo = RepositoryHelper.Get客戶清單Repository();
 
         /// <summary>
         /// 客戶清單列表
@@ -16,11 +15,7 @@ namespace HomeWorkForMVC5.Controllers
         {
             ViewBag.search = search;
 
-            var data = db.客戶清單.AsQueryable();
-            if (string.IsNullOrEmpty(search) == false)
-            {
-                data = data.Where(d => d.客戶名稱.Contains(search));
-            }
+            var data = this.repo.GetByKeyword(search);
 
             return View(data);
         }
@@ -29,7 +24,7 @@ namespace HomeWorkForMVC5.Controllers
         {
             if (disposing)
             {
-                db.Dispose();
+                ((客戶資料Entities)this.repo.UnitOfWork.Context).Dispose();
             }
             base.Dispose(disposing);
         }
