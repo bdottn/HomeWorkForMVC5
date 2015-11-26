@@ -50,6 +50,7 @@ namespace HomeWorkForMVC5.Models
         public string Email { get; set; }
 
         [StringLength(50, ErrorMessage = "欄位長度不得大於 50 個字元")]
+        [CellPhone]
         public string 手機 { get; set; }
 
         [StringLength(50, ErrorMessage = "欄位長度不得大於 50 個字元")]
