@@ -125,8 +125,11 @@ namespace HomeWorkForMVC5.Controllers
         public ActionResult DeleteConfirmed(int id)
         {
             客戶聯絡人 客戶聯絡人 = db.客戶聯絡人.Find(id);
-            db.客戶聯絡人.Remove(客戶聯絡人);
+
+            客戶聯絡人.是否已刪除 = true;
+
             db.SaveChanges();
+
             return RedirectToAction("Index");
         }
 
