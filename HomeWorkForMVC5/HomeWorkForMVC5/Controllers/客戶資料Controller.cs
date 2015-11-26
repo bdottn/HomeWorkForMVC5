@@ -122,7 +122,19 @@ namespace HomeWorkForMVC5.Controllers
             客戶資料 客戶資料 = db.客戶資料.Find(id);
 
             客戶資料.是否已刪除 = true;
-            
+
+            // 連動刪除客戶資料中的客戶聯絡人
+            foreach (var item in 客戶資料.客戶聯絡人)
+            {
+                item.是否已刪除 = true;
+            }
+
+            // 連動刪除客戶資料中的客戶銀行資訊
+            foreach (var item in 客戶資料.客戶銀行資訊)
+            {
+                item.是否已刪除 = true;
+            }
+
             db.SaveChanges();
 
             return RedirectToAction("Index");
