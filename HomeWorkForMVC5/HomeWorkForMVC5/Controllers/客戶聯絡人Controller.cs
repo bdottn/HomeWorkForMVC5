@@ -14,11 +14,13 @@ namespace HomeWorkForMVC5.Controllers
         /// 客戶聯絡人管理
         /// </summary>
         /// <param name="search">聯絡人姓名</param>
-        public ActionResult Index(string search)
+        public ActionResult Index(string search, string 職稱)
         {
-            ViewBag.search = search;
+            var list = this.repo.Get職稱();
 
-            var data = this.repo.GetByKeyword(search, false);
+            ViewBag.職稱 = new SelectList(list);
+
+            var data = this.repo.GetByKeyword(search, 職稱, false);
 
             return View(data);
         }
