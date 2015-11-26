@@ -33,7 +33,7 @@ namespace HomeWorkForMVC5.Models
 
             if (string.IsNullOrEmpty(客戶分類) == false)
             {
-                data = data.Where(d => d.客戶分類.Equals(客戶分類));
+                data = data.Where(d => 客戶分類.Equals(d.客戶分類));
             }
 
             return data;
