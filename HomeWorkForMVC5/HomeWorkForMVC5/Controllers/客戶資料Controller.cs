@@ -13,11 +13,13 @@ namespace HomeWorkForMVC5.Controllers
         /// 客戶資料管理
         /// </summary>
         /// <param name="search">客戶名稱</param>
-        public ActionResult Index(string search)
+        public ActionResult Index(string search, string 客戶分類)
         {
-            ViewBag.search = search;
+            var list = this.repo.Get客戶分類();
 
-            var data = this.repo.GetByKeyword(search, false);
+            ViewBag.客戶分類 = new SelectList(list);
+
+            var data = this.repo.GetByKeyword(search, 客戶分類, false);
 
             return View(data);
         }

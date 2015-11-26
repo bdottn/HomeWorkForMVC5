@@ -13,7 +13,7 @@ namespace HomeWorkForMVC5.Models
             return data;
         }
 
-        public IQueryable<客戶資料> GetByKeyword(string search, bool? 是否已刪除 = null)
+        public IQueryable<客戶資料> GetByKeyword(string search, string 客戶分類, bool? 是否已刪除 = null)
         {
             IQueryable<客戶資料> data;
 
@@ -31,7 +31,17 @@ namespace HomeWorkForMVC5.Models
                 data = data.Where(d => d.客戶名稱.Contains(search));
             }
 
+            if (string.IsNullOrEmpty(客戶分類) == false)
+            {
+                data = data.Where(d => d.客戶分類.Equals(客戶分類));
+            }
+
             return data;
+        }
+
+        public IQueryable<string> Get客戶分類()
+        {
+            return this.All(false).Where(d => string.IsNullOrEmpty(d.客戶分類) == false).Select(d => d.客戶分類).Distinct();
         }
 
         public 客戶資料 GetById(int? id)
