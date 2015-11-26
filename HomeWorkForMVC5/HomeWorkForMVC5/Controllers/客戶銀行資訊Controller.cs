@@ -58,7 +58,7 @@ namespace HomeWorkForMVC5.Controllers
         // 詳細資訊，請參閱 http://go.microsoft.com/fwlink/?LinkId=317598。
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Id,客戶Id,銀行名稱,銀行代碼,分行代碼,帳戶名稱,帳戶號碼")] 客戶銀行資訊 客戶銀行資訊)
+        public ActionResult Create([Bind(Include = "Id,客戶Id,銀行名稱,銀行代碼,分行代碼,帳戶名稱,帳戶號碼,是否已刪除")] 客戶銀行資訊 客戶銀行資訊)
         {
             if (ModelState.IsValid)
             {
@@ -92,7 +92,7 @@ namespace HomeWorkForMVC5.Controllers
         // 詳細資訊，請參閱 http://go.microsoft.com/fwlink/?LinkId=317598。
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Id,客戶Id,銀行名稱,銀行代碼,分行代碼,帳戶名稱,帳戶號碼")] 客戶銀行資訊 客戶銀行資訊)
+        public ActionResult Edit([Bind(Include = "Id,客戶Id,銀行名稱,銀行代碼,分行代碼,帳戶名稱,帳戶號碼,是否已刪除")] 客戶銀行資訊 客戶銀行資訊)
         {
             if (ModelState.IsValid)
             {
@@ -127,7 +127,7 @@ namespace HomeWorkForMVC5.Controllers
             客戶銀行資訊 客戶銀行資訊 = db.客戶銀行資訊.Find(id);
 
             客戶銀行資訊.是否已刪除 = true;
-            
+
             db.SaveChanges();
 
             return RedirectToAction("Index");
