@@ -1,4 +1,5 @@
-﻿@model IEnumerable<HomeWorkForMVC5.Models.客戶清單>
+﻿@using HomeWorkForMVC5.Models
+@model IEnumerable<客戶清單>
 
 @{
     ViewBag.Title = "客戶清單列表";
@@ -44,7 +45,7 @@
                 @Html.ActionLink(item.客戶名稱, "Index", "客戶資料", new { search = item.客戶名稱 }, null)
             </td>
             <td>
-                @Html.ActionLink(item.聯絡人數量.ToString(), "Index", "客戶聯絡人", new { search = item.客戶名稱}, null)
+                @Html.ActionLink(item.聯絡人數量.ToString(), "Index", "客戶聯絡人", new { search = item.客戶名稱 }, null)
             </td>
             <td>
                 @Html.ActionLink(item.銀行帳戶數量.ToString(), "Index", "客戶銀行資訊", new { search = item.客戶名稱 }, null)
