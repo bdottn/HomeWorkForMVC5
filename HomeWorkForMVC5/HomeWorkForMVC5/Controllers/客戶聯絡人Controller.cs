@@ -126,9 +126,13 @@ namespace HomeWorkForMVC5.Controllers
         {
             客戶聯絡人 客戶聯絡人 = db.客戶聯絡人.Find(id);
 
-            客戶聯絡人.是否已刪除 = true;
+            if (ModelState.IsValid)
+            {
+                客戶聯絡人.是否已刪除 = true;
 
-            db.SaveChanges();
+                db.Entry(客戶聯絡人).State = EntityState.Modified;
+                db.SaveChanges();
+            }
 
             return RedirectToAction("Index");
         }
