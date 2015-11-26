@@ -20,7 +20,7 @@ namespace HomeWorkForMVC5.Models
             {
                 客戶資料 客戶資料 = this.db.客戶資料.Find(this.客戶Id);
 
-                if (客戶資料.客戶聯絡人.Any(d => d.是否已刪除 == false && Email.Equals(d.Email)))
+                if (客戶資料.客戶聯絡人.Any(d => d.是否已刪除 == false && d.Id != this.Id && Email.Equals(d.Email)))
                 {
                     yield return new ValidationResult
                     ("同一個客戶下的聯絡人，其 Email 不能重複。", new[] { "Email" });
