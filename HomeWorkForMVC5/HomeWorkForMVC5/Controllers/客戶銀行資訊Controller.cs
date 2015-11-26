@@ -21,6 +21,8 @@ namespace HomeWorkForMVC5.Controllers
             var data = db.客戶銀行資訊.AsQueryable();
             data = data.Include(d => d.客戶資料);
 
+            data = data.Where(d => d.是否已刪除 == false);
+
             if (string.IsNullOrEmpty(search) == false)
             {
                 data = data.Where(d => d.帳戶名稱.Contains(search) || d.客戶資料.客戶名稱.Contains(search));
