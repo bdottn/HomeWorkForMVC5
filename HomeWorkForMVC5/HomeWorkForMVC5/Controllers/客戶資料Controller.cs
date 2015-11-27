@@ -1,6 +1,9 @@
 ﻿using HomeWorkForMVC5.Models;
+using System;
 using System.Data.Entity;
 using System.Net;
+using System.Security.Cryptography;
+using System.Text;
 using System.Web.Mvc;
 
 namespace HomeWorkForMVC5.Controllers
@@ -46,12 +49,22 @@ namespace HomeWorkForMVC5.Controllers
             return View();
         }
 
+        public static string Sha256encrypt(string phrase)
+        {
+            UTF8Encoding encoder = new UTF8Encoding();
+            SHA256Managed sha256hasher = new SHA256Managed();
+            byte[] hashedDataBytes = sha256hasher.ComputeHash(encoder.GetBytes(phrase));
+            return Convert.ToBase64String(hashedDataBytes);
+        }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Id,客戶名稱,統一編號,電話,傳真,地址,Email,是否已刪除,客戶分類")] 客戶資料 客戶資料)
+        public ActionResult Create([Bind(Include = "Id,客戶名稱,統一編號,電話,傳真,地址,Email,是否已刪除,客戶分類,精度,緯度,帳號,密碼")] 客戶資料 客戶資料)
         {
             if (ModelState.IsValid)
             {
+                客戶資料.密碼 = Sha256encrypt(客戶資料.密碼);
+
                 this.repo.Add(客戶資料);
 
                 this.repo.UnitOfWork.Commit();
@@ -81,7 +94,7 @@ namespace HomeWorkForMVC5.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Id,客戶名稱,統一編號,電話,傳真,地址,Email,是否已刪除,客戶分類,精度,緯度")] 客戶資料 客戶資料)
+        public ActionResult Edit([Bind(Include = "Id,客戶名稱,統一編號,電話,傳真,地址,Email,是否已刪除,客戶分類,精度,緯度,帳號,密碼")] 客戶資料 客戶資料)
         {
             if (ModelState.IsValid)
             {

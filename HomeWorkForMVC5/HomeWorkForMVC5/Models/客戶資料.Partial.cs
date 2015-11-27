@@ -37,11 +37,15 @@ namespace HomeWorkForMVC5.Models
         public string Email { get; set; }
 
         [Required]
-
         public bool 是否已刪除 { get; set; }
 
         [StringLength(50, ErrorMessage="欄位長度不得大於 50 個字元")]
         public string 客戶分類 { get; set; }
+
+        public string 精度 { get; set; }
+        public string 緯度 { get; set; }
+        public string 帳號 { get; set; }
+        public string 密碼 { get; set; }
 
         public virtual ICollection<客戶銀行資訊> 客戶銀行資訊 { get; set; }
 

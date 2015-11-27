@@ -7,11 +7,10 @@
 
 <h2>Create</h2>
 
-
-@using (Html.BeginForm()) 
+@using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
-    
+
     <div class="form-horizontal">
         <h4>客戶資料</h4>
         <hr />
@@ -73,6 +72,45 @@
         </div>
 
         <div class="form-group">
+            @Html.LabelFor(model => model.精度, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                <input type="text" id="lat" name="精度" class="form-control" readonly="readonly">
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.緯度, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                <input type="text" id="lng" name="緯度" class="form-control" readonly="readonly">
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.帳號, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.帳號, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.帳號, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.密碼, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.密碼, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.密碼, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="control-label col-md-2">
+                地圖
+            </div>
+            <div class="col-md-10">
+                <div id="map" style="width:500px; height:400px"></div>
+            </div>
+        </div>
+
+        <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
                 <input type="submit" value="Create" class="btn btn-default" />
             </div>
@@ -86,4 +124,70 @@
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
+
+    <script>
+        var map; //Will contain map object.
+        var marker = false; ////Has the user plotted their location marker?
+
+        //Function called to initialize / create the map.
+        //This is called when the page has loaded.
+        function initMap() {
+
+            //The center location of our map.
+            var centerOfMap = new google.maps.LatLng(-25.363, 131.044);
+
+            //Map options.
+            var options = {
+                center: centerOfMap, //Set center.
+                zoom: 7 //The zoom value.
+            };
+
+            //Create the map object.
+            map = new google.maps.Map(document.getElementById('map'), options);
+
+            //Listen for any clicks on the map.
+            google.maps.event.addListener(map, 'click', function (event) {
+                //Get the location that the user clicked.
+                var clickedLocation = event.latLng;
+                //If the marker hasn't been added.
+                if (marker === false) {
+                    //Create the marker.
+                    marker = new google.maps.Marker({
+                        position: clickedLocation,
+                        map: map,
+                        draggable: true //make it draggable
+                    });
+
+                    google.maps.event.removeListener(nowMarker);
+
+                    //Listen for drag events!
+                    google.maps.event.addListener(marker, 'dragend', function (event) {
+                        markerLocation();
+                    });
+
+                } else {
+                    //Marker has already been added, so just change its location.
+                    marker.setPosition(clickedLocation);
+                }
+                //Get the marker's location.
+                markerLocation();
+            });
+        }
+
+        //This function will get the marker's current location and then add the lat/long
+        //values to our textfields so that we can save the location.
+        function markerLocation() {
+            //Get location.
+            var currentLocation = marker.getPosition();
+            //Add lat and lng values to a field that we can save.
+            document.getElementById('lat').value = currentLocation.lat(); //latitude
+            document.getElementById('lng').value = currentLocation.lng(); //longitude
+        }
+
+
+        //Load the map when the page has finished loading.
+        google.maps.event.addDomListener(window, 'load', initMap);
+    </script>
+
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAR1OI9LQr07y5PygXtyRb_WACYOEAH6P4&callback=initMap" async defer></script>
 }
