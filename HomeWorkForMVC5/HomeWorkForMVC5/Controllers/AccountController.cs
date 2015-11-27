@@ -9,6 +9,7 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using HomeWorkForMVC5.Models;
+using System.Text;
 
 namespace HomeWorkForMVC5.Controllers
 {
@@ -22,7 +23,7 @@ namespace HomeWorkForMVC5.Controllers
         {
         }
 
-        public AccountController(ApplicationUserManager userManager, ApplicationSignInManager signInManager )
+        public AccountController(ApplicationUserManager userManager, ApplicationSignInManager signInManager)
         {
             UserManager = userManager;
             SignInManager = signInManager;
@@ -34,9 +35,9 @@ namespace HomeWorkForMVC5.Controllers
             {
                 return _signInManager ?? HttpContext.GetOwinContext().Get<ApplicationSignInManager>();
             }
-            private set 
-            { 
-                _signInManager = value; 
+            private set
+            {
+                _signInManager = value;
             }
         }
 
@@ -61,34 +62,64 @@ namespace HomeWorkForMVC5.Controllers
             return View();
         }
 
+        public static string Sha256encrypt(string phrase)
+        {
+            UTF8Encoding encoder = new UTF8Encoding();
+            System.Security.Cryptography.SHA256Managed sha256hasher = new System.Security.Cryptography.SHA256Managed();
+            byte[] hashedDataBytes = sha256hasher.ComputeHash(encoder.GetBytes(phrase));
+            return Convert.ToBase64String(hashedDataBytes);
+        }
+
+
+
         //
         // POST: /Account/Login
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Login(LoginViewModel model, string returnUrl)
+        public ActionResult Login(LoginViewModel model, string returnUrl)
         {
             if (!ModelState.IsValid)
             {
                 return View(model);
             }
 
-            // 這不會計算為帳戶鎖定的登入失敗
-            // 若要啟用密碼失敗來觸發帳戶鎖定，請變更為 shouldLockout: true
-            var result = await SignInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, shouldLockout: false);
-            switch (result)
+            客戶資料Repository repo = RepositoryHelper.Get客戶資料Repository();
+            var 客戶資料 = repo.GetBy帳號(model.Email);
+
+            if (客戶資料.密碼.Equals(Sha256encrypt(model.Password)))
             {
-                case SignInStatus.Success:
-                    return RedirectToLocal(returnUrl);
-                case SignInStatus.LockedOut:
-                    return View("Lockout");
-                case SignInStatus.RequiresVerification:
-                    return RedirectToAction("SendCode", new { ReturnUrl = returnUrl, RememberMe = model.RememberMe });
-                case SignInStatus.Failure:
-                default:
-                    ModelState.AddModelError("", "登入嘗試失試。");
-                    return View(model);
+                System.Web.Security.FormsAuthentication.RedirectFromLoginPage(客戶資料.客戶名稱, false);
+
+                string strUsername = "will";
+                System.Web.Security.FormsAuthentication.RedirectFromLoginPage(strUsername, false);
+
+                var a = this.User.Identity.Name;
+                return RedirectToLocal(returnUrl);
             }
+            else
+            {
+                ModelState.AddModelError("", "登入嘗試失試。");
+                return View(model);
+            }
+
+            //// 這不會計算為帳戶鎖定的登入失敗
+            //// 若要啟用密碼失敗來觸發帳戶鎖定，請變更為 shouldLockout: true
+            //var result = await SignInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, shouldLockout: false);
+            //switch (result)
+            //{
+            //    case SignInStatus.Success:
+            //        return RedirectToLocal(returnUrl);
+            //    case SignInStatus.LockedOut:
+            //        return View("Lockout");
+            //    case SignInStatus.RequiresVerification:
+            //        return RedirectToAction("SendCode", new { ReturnUrl = returnUrl, RememberMe = model.RememberMe });
+            //    case SignInStatus.Failure:
+            //    default:
+            //        ModelState.AddModelError("", "登入嘗試失試。");
+            //        return View(model);
+            //}
+
         }
 
         //
@@ -120,7 +151,7 @@ namespace HomeWorkForMVC5.Controllers
             // 如果使用者輸入不正確的代碼來表示一段指定的時間，則使用者帳戶 
             // 會有一段指定的時間遭到鎖定。 
             // 您可以在 IdentityConfig 中設定帳戶鎖定設定
-            var result = await SignInManager.TwoFactorSignInAsync(model.Provider, model.Code, isPersistent:  model.RememberMe, rememberBrowser: model.RememberBrowser);
+            var result = await SignInManager.TwoFactorSignInAsync(model.Provider, model.Code, isPersistent: model.RememberMe, rememberBrowser: model.RememberBrowser);
             switch (result)
             {
                 case SignInStatus.Success:
@@ -155,8 +186,8 @@ namespace HomeWorkForMVC5.Controllers
                 var result = await UserManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {
-                    await SignInManager.SignInAsync(user, isPersistent:false, rememberBrowser:false);
-                    
+                    await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
+
                     // 如需如何啟用帳戶確認和密碼重設的詳細資訊，請造訪 http://go.microsoft.com/fwlink/?LinkID=320771
                     // 傳送包含此連結的電子郵件
                     // string code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
@@ -449,7 +480,7 @@ namespace HomeWorkForMVC5.Controllers
             {
                 return Redirect(returnUrl);
             }
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("Index", "客戶清單");
         }
 
         internal class ChallengeResult : HttpUnauthorizedResult

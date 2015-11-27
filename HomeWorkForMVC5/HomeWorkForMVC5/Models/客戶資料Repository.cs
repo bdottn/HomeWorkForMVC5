@@ -49,6 +49,11 @@ namespace HomeWorkForMVC5.Models
             return this.All().FirstOrDefault(d => d.Id == id);
         }
 
+        public 客戶資料 GetBy帳號(string 帳號)
+        {
+            return this.All().FirstOrDefault(d => d.帳號 == 帳號);
+        }
+
         public override void Delete(客戶資料 客戶資料)
         {
             客戶資料.是否已刪除 = true;
