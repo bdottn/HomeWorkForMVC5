@@ -6,12 +6,12 @@
 　4. 客戶資料列表頁面的「客戶分類」篩選功能，請使用 @Html.DropDownList 進行控制，選取後必須能自動更新頁面
 　5. 請在客戶資料表加入兩個欄位，儲存「經緯度座標」(經度、緯度)
 　　5.1 設定 DisplayTemplates 可以自動顯示 Google Maps 地圖
-　　5.2 參考資料: https://developers.google.com/…/javascr…/examples/map-simple
+　　5.2 參考資料: https://developers.google.com/maps/documentation/javascript/examples/map-simple
 　　5.3 設定 EditorTemplates 可以透過 Google Maps 地圖選擇經緯度 (而非手動輸入)
 　　5.4 參考資料1: https://developers.google.com/maps/get-started/
-　　5.5 參考資料2: http://thisinterestsme.com/google-maps-api-location-picker…/
+　　5.5 參考資料2: http://thisinterestsme.com/google-maps-api-location-picker-example/
 　6. 加入客戶登入功能
 　　6.1 客戶資料表新增「帳號」、「密碼」欄位
 　　6.2 密碼欄位儲存時，必須使用 SHA256 進行雜湊處理
 　　6.3 請使用 ASP.NET 表單驗證 (FormsAuthentication) 的方式實作會員登入、登出功能
-　　6.4 參考資料: http://blog.miniasp.com/…/Explain-Forms-Authentication-in-A…
+　　6.4 參考資料: http://blog.miniasp.com/post/2008/02/21/Explain-Forms-Authentication-in-ASPNET-20.aspx
