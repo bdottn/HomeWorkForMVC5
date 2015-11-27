@@ -364,6 +364,7 @@
     <Content Include="Views\客戶銀行資訊\Edit.cshtml" />
     <Content Include="Views\客戶銀行資訊\Index.cshtml" />
     <Content Include="Views\客戶清單\Index.cshtml" />
+    <Content Include="Views\Shared\DisplayTemplates\客戶資料.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

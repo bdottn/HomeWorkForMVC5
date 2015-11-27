@@ -10,65 +10,34 @@
 <div>
     <h4>客戶資料</h4>
     <hr />
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.客戶名稱)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.客戶名稱)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.統一編號)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.統一編號)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.電話)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.電話)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.傳真)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.傳真)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.地址)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.地址)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.Email)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.Email)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.客戶分類)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.客戶分類)
-        </dd>
-
-    </dl>
+    @Html.DisplayForModel()
 </div>
 <p>
     @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
     @Html.ActionLink("Back to List", "Index")
 </p>
+
+@section Scripts {
+    <script>
+        var map;
+        function initMap() {
+            var myLatLng = { lat: @( string.IsNullOrEmpty(Model.精度)? "-25.363":Model.精度), lng: @( string.IsNullOrEmpty(Model.緯度) ? "131.044" : Model.緯度) };
+
+            // Create a map object and specify the DOM element for display.
+            var map = new google.maps.Map(document.getElementById('map'), {
+                center: myLatLng,
+                scrollwheel: false,
+                zoom: 4
+            });
+
+            // Create a marker and set its position.
+            var marker = new google.maps.Marker({
+                map: map,
+                position: myLatLng,
+                title: 'Hello World!'
+            });
+        }
+    </script>
+
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAR1OI9LQr07y5PygXtyRb_WACYOEAH6P4&callback=initMap" async defer></script>
+}
