@@ -25,7 +25,7 @@
         function initMap() {
 
             //The center location of our map.
-            var centerOfMap = new google.maps.LatLng(52.357971, -6.516758);
+            var centerOfMap = new google.maps.LatLng(@( string.IsNullOrEmpty(Model.精度)? "-25.363":Model.精度),  @( string.IsNullOrEmpty(Model.緯度) ? "131.044" : Model.緯度) );
 
             //Map options.
             var options = {
@@ -48,10 +48,14 @@
                         map: map,
                         draggable: true //make it draggable
                     });
+
+                    google.maps.event.removeListener(nowMarker);
+
                     //Listen for drag events!
                     google.maps.event.addListener(marker, 'dragend', function (event) {
                         markerLocation();
                     });
+
                 } else {
                     //Marker has already been added, so just change its location.
                     marker.setPosition(clickedLocation);
